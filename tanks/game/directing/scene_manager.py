@@ -130,33 +130,21 @@ class SceneManager:
 
         
     def _prepare_try_again(self, cast, script):
-        self._add_ball(cast)
-        self._add_racket(cast)
+        #self._add_ball(cast)
+        #self._add_racket(cast)
         self._add_dialog(cast, PREP_TO_LAUNCH)
 
         script.clear_actions(INPUT)
         script.add_action(INPUT, TimedChangeSceneAction(IN_PLAY, 2))
-        self._add_update_script(script)
+        #self._add_update_script(script)
+        self._reset_healths(cast)
         self._add_output_script_dialogs(script)
 
     def _prepare_in_play(self, cast, script):
-        #self._activate_ball(cast)
-        #self._add_terrain(cast)
         cast.clear_actors(DIALOG_GROUP)
-
         self._add_input_script(script)
         self._add_update_script(script)
         self._add_output_script(script)
-        #script.clear_actions(OUTPUT)
-        #script.add_action(OUTPUT, self.START_DRAWING_ACTION)
-        #script.add_action(OUTPUT, self.DRAW_HUD_ACTION)
-        #script.add_action(OUTPUT, self.DRAW_PROJECTILES_ACTION)
-        #script.add_action(OUTPUT, self.DRAW_TANKS_ACTION)
-        #script.add_action(OUTPUT, self.DRAW_RACKET_ACTION)
-        #script.add_action(OUTPUT, self.DRAW_TERRAIN_ACTION)
-        #script.add_action(OUTPUT, self.END_DRAWING_ACTION)
-
-
 
     def _prepare_game_over(self, cast, script):
         self._add_ball(cast)
@@ -171,18 +159,15 @@ class SceneManager:
     # ----------------------------------------------------------------------------------------------
     # casting methods
     # ----------------------------------------------------------------------------------------------
-    
-    def _activate_ball(self, cast):
-        #ball = cast.get_first_actor(BALL_GROUP)
-        #ball.release()
-        pass
 
     def _add_terrain(self, cast):
         """Adds the terrain on a new scene
         Args:
             cast (Cast): the cast of actors
         """
-        terrain = Terrain(LEVELS[3]["terrain"], TERRAIN_IMAGE)
+        stats = cast.get_first_actor(STATS_GROUP)
+        level = stats.get_level()
+        terrain = Terrain(LEVELS[level]["terrain"], TERRAIN_IMAGE)
         cast.add_actor(TERRAIN_GROUP, terrain)
 
     def _add_dialog(self, cast, message):
@@ -281,6 +266,11 @@ class SceneManager:
         tank2 = Tank(pos_tank2, TANK2_SIZE, TANK2_VELOCITY, TANK2_IMAGE, TANK2_SCALE, TANK2_ROTATION)
         cast.add_actor(TANKS_GROUP, tank1)
         cast.add_actor(TANKS_GROUP, tank2)
+
+    def _reset_healths(self, cast):
+        healths = cast.get_actors(HEALTH_GROUP)
+        for health in healths:
+            health.update_value(HEALTH_MAX)
 
     # ----------------------------------------------------------------------------------------------
     # scripting methods
