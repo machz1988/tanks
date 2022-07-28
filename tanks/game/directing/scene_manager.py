@@ -3,9 +3,9 @@ from constants import *
 from levels import *
 from game.casting.animation import Animation
 from game.casting.projectile import Projectile
-from game.casting.body import Body
+from game.casting.rectangle import Rectangle
 from game.casting.terrain import Terrain
-from game.casting.image import Image
+from game.casting.meter import Meter
 from game.casting.label import Label
 from game.casting.point import Point
 from game.casting.tank import Tank
@@ -24,6 +24,7 @@ from game.scripting.draw_terrain_action import DrawTerrainAction
 from game.scripting.draw_tanks_action import DrawTanksAction
 from game.scripting.draw_stats_action import DrawStatsAction
 from game.scripting.draw_messages_action import DrawMessagesAction
+from game.scripting.draw_meters_action import DrawMetersAction
 from game.scripting.draw_welcome_action import DrawWelcomeAction
 from game.scripting.end_drawing_action import EndDrawingAction
 from game.scripting.generate_aim_action import GenerateAimAction
@@ -63,6 +64,7 @@ class SceneManager:
     DRAW_TERRAIN_ACTION = DrawTerrainAction(VIDEO_SERVICE)
     DRAW_HUD_ACTION = DrawHudAction(VIDEO_SERVICE)
     DRAW_RACKET_ACTION= DrawMessagesAction(VIDEO_SERVICE)
+    DRAW_METERS_ACTION = DrawMetersAction(VIDEO_SERVICE)
     END_DRAWING_ACTION = EndDrawingAction(VIDEO_SERVICE)
     GENERATE_AIM_ACTION = GenerateAimAction(MOUSE_SERVICE)
     HANDLE_MOUSE_PRESSED = HandleMousePressed(MOUSE_SERVICE)
@@ -115,8 +117,8 @@ class SceneManager:
         self._add_lives(cast)
         self._add_score(cast)
         self._add_health(cast)
-        self._add_projectile_power(cast)
         self._add_shooting_power(cast)
+        self._add_projectile_power(cast)
         self._add_terrain(cast)
         self._add_tanks(cast)
         self._add_dialog(cast, PREP_TO_LAUNCH)
@@ -213,24 +215,52 @@ class SceneManager:
 
     def _add_health(self, cast):
         cast.clear_actors(HEALTH_GROUP)
-        text = Text(HEALTH_FORMAT, FONT_FILE, FONT_SMALL, ALIGN_LEFT)
-        position = Point(HUD_MARGIN, HUD_MARGIN + FONT_MEDIUM + HUD_MARGIN)
+        # health 1
+        text = Text(HEALTH_STRING, FONT_FILE, FONT_SMALL)
+        position = HEALTH_LABEL1_POSITION
         label = Label(text, position)
-        cast.add_actor(HEALTH_GROUP, label)
+        holder = Rectangle(HEALTH_1_POSITION, HEALTH_1_SIZE)
+        health = Meter(label, holder, HEALTH_MAX, HEALTH_MIN, HEALTH_MAX, GREEN)
+        cast.add_actor(HEALTH_GROUP, health)
+        # health 1
+        text = Text(HEALTH_STRING, FONT_FILE, FONT_SMALL)
+        position = HEALTH_LABEL2_POSITION
+        label = Label(text, position)
+        holder = Rectangle(HEALTH_2_POSITION, HEALTH_2_SIZE)
+        health = Meter(label, holder, HEALTH_MAX, HEALTH_MIN, HEALTH_MAX, GREEN)
+        cast.add_actor(HEALTH_GROUP, health)
     
     def _add_projectile_power(self, cast):
         cast.clear_actors(PROJECTILE_POWER_GROUP)
-        text = Text(PROJECTILE_POWER_FORMAT, FONT_FILE, FONT_SMALL, ALIGN_LEFT)
-        position = Point(HUD_MARGIN, HUD_MARGIN + FONT_MEDIUM + HUD_MARGIN + FONT_SMALL + HUD_MARGIN)
+        # projectile power 1
+        text = Text(PROJECTILE_POWER_STRING, FONT_FILE, FONT_SMALL)
+        position = PROJECTILE_POWER_LABEL1_POSITION
         label = Label(text, position)
-        cast.add_actor(PROJECTILE_POWER_GROUP, label)
+        holder = Rectangle(PROJECTILE_POWER_1_POSITION, PROJECTILE_POWER_1_SIZE)
+        projectile_power = Meter(label, holder, PROJECTILE_DEFAULT_POWER, PROJECTILE_POWER_MIN, PROJECTILE_POWER_MAX, RED)
+        cast.add_actor(PROJECTILE_POWER_GROUP, projectile_power)
+        # projectile power 2
+        #text = Text(PROJECTILES_POWER_STRING, FONT_FILE, FONT_SMALL)
+        position = PROJECTILE_POWER_LABEL2_POSITION
+        label = Label(text, position)
+        holder = Rectangle(PROJECTILE_POWER_2_POSITION, PROJECTILE_POWER_2_SIZE)
+        projectile_power = Meter(label, holder, PROJECTILE_DEFAULT_POWER, PROJECTILE_POWER_MIN, PROJECTILE_POWER_MAX, RED)
+        cast.add_actor(PROJECTILE_POWER_GROUP, projectile_power)
 
     def _add_shooting_power(self, cast):
         cast.clear_actors(SHOOTING_POWER_GROUP)
-        text = Text(SHOOTING_POWER_FORMAT, FONT_FILE, FONT_SMALL, ALIGN_LEFT)
-        position = Point(HUD_MARGIN, HUD_MARGIN + FONT_MEDIUM + HUD_MARGIN + FONT_SMALL + HUD_MARGIN + FONT_SMALL + HUD_MARGIN)
-        label = Label(text, position)
-        cast.add_actor(SHOOTING_POWER_GROUP, label)
+        # shooting power 1
+        text = Text(SHOOTING_POWER_STRING, FONT_FILE, FONT_SMALL)
+        label = Label(text, SHOOTING_POWER_LABEL1_POSITION)
+        holder = Rectangle(SHOOTING_POWER_1_POSITION, SHOOTING_POWER_1_SIZE)
+        shooting_power = Meter(label, holder, SHOOTING_POWER_DEFAULT, SHOOTING_POWER_MIN, SHOOTING_POWER_MAX, YELLOW)
+        cast.add_actor(SHOOTING_POWER_GROUP, shooting_power)
+        # shooting power 2
+        text = Text(SHOOTING_POWER_STRING, FONT_FILE, FONT_SMALL)
+        label = Label(text, SHOOTING_POWER_LABEL2_POSITION)
+        holder = Rectangle(SHOOTING_POWER_2_POSITION, SHOOTING_POWER_2_SIZE)
+        shooting_power = Meter(label, holder, SHOOTING_POWER_DEFAULT, SHOOTING_POWER_MIN, SHOOTING_POWER_MAX, YELLOW)
+        cast.add_actor(SHOOTING_POWER_GROUP, shooting_power)    
 
     def _add_stats(self, cast):
         cast.clear_actors(STATS_GROUP)
@@ -240,12 +270,12 @@ class SceneManager:
     def _add_tanks(self, cast):
         terrain = cast.get_first_actor(TERRAIN_GROUP)
         pos_tank1 = terrain.get_tank1_position()
-        x1 = pos_tank1.get_x() - 10
-        y1 = pos_tank1.get_y() - 10
+        x1 = pos_tank1.get_x()
+        y1 = pos_tank1.get_y()
         pos_tank1 = Point(x1,y1)
         pos_tank2 = terrain.get_tank2_position()
-        x2 = pos_tank2.get_x() - 10
-        y2 = pos_tank2.get_y() - 10
+        x2 = pos_tank2.get_x()
+        y2 = pos_tank2.get_y()
         pos_tank2 = Point(x2,y2)
         tank1 = Tank(pos_tank1, TANK1_SIZE, TANK1_VELOCITY, TANK1_IMAGE, TANK1_SCALE, TANK1_ROTATION)
         tank2 = Tank(pos_tank2, TANK2_SIZE, TANK2_VELOCITY, TANK2_IMAGE, TANK2_SCALE, TANK2_ROTATION)
@@ -273,11 +303,12 @@ class SceneManager:
     def _add_output_script(self, script):
         script.clear_actions(OUTPUT)
         script.add_action(OUTPUT, self.START_DRAWING_ACTION)
-        script.add_action(OUTPUT, self.DRAW_HUD_ACTION)
         script.add_action(OUTPUT, self.DRAW_TERRAIN_ACTION)
         script.add_action(OUTPUT, self.DRAW_TANKS_ACTION)
         script.add_action(OUTPUT, self.DRAW_PROJECTIONS_ACTION)
         script.add_action(OUTPUT, self.DRAW_PROJECTILES_ACTION)
+        script.add_action(OUTPUT, self.DRAW_HUD_ACTION)
+        script.add_action(OUTPUT, self.DRAW_METERS_ACTION)
         script.add_action(OUTPUT, self.DRAW_DIALOG_ACTION)
         script.add_action(OUTPUT, self.END_DRAWING_ACTION)
 

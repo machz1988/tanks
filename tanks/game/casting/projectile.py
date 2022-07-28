@@ -13,12 +13,12 @@ class Projectile(Actor):
         _radius (integer): the circle's radius, which represents the projectile 
     """
     
-    def __init__(self, image, body, v0, angle0, power=constants.PROJECTILE_EXAMPLE_POWER):
+    def __init__(self, image, circle, v0, angle0, power=constants.PROJECTILE_EXAMPLE_POWER):
         """Constructs an instance of projectile
         """
         super().__init__()
         #self._radius = radius
-        self._initial_position = body.get_position()
+        self._initial_position = circle.get_center()
         #self.set_position(position)
         self._v0 = v0
         angle0_rad = math.radians(angle0)
@@ -26,7 +26,7 @@ class Projectile(Actor):
         self._v0y = v0 * math.sin(angle0_rad)
         self._t = 0
         self._power = power
-        self._body = body
+        self._circle = circle
         self._image = image
 
     def calculate_projection_position(self, t):
@@ -40,12 +40,12 @@ class Projectile(Actor):
         y = (self._initial_position.get_y() + int(y)) 
         return Point(x, y)
 
-    def get_body(self):
+    def get_circle(self):
         """Get the projectile's body
         Returns:
             body (Body): the projectile's body
         """
-        return self._body
+        return self._circle
 
     def get_image(self):
         """Get the projectile's image
@@ -71,7 +71,7 @@ class Projectile(Actor):
         #self.set_velocity(velocity)
         x = self._initial_position.get_x() + int(x)
         y = self._initial_position.get_y() + int(y) 
-        self._body.set_position(Point(x, y))
+        self._circle.set_center(Point(x, y))
 
     def _calculate_x(self):
         """Calculate the movement in the x axis

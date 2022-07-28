@@ -1,6 +1,6 @@
 import math
 import constants
-from game.casting.body import Body
+from game.casting.circle import Circle
 from game.casting.image import Image
 from game.casting.point import Point
 from game.casting.projectile import Projectile
@@ -20,10 +20,12 @@ class HandleMousePressed(Action):
             body_t = tank1.get_body()
             position_t = body_t.get_position()
             size_t = body_t.get_size()
-            size = constants.PROJECTILE_SIZE
             xp = position_t.get_x() + int(size_t.get_x()/2)
             yp = position_t.get_y() - int(size_t.get_y()/2)
-            position = Point(xp,yp)
+            center = Point(xp,yp)
+            radius = constants.PROJECTILE_RADIUS
+            shooting_power = cast.get_first_actor(constants.SHOOTING_POWER_GROUP)
+            projectile_power = cast.get_first_actor(constants.PROJECTILE_POWER_GROUP)
             h = math.sqrt(math.pow(yc - yp, 2) + math.pow(xc - xp, 2))
             theta = int(math.asin((yc - yp) / h) * 180 / math.pi)
             if xc > xp:
@@ -31,6 +33,8 @@ class HandleMousePressed(Action):
             else:
                 theta = 180 + theta
             image = Image(constants.PROJECTILE_IMAGE, constants.PROJECTILE_SCALE, constants.PROJECTILE_ROTATION)
-            body = Body(position, size)
-            projectile = Projectile(image,body,constants.PROJECTILE_EXAMPLE_V0, theta)
+            circle = Circle(center, radius, constants.WHITE)
+            v0 = shooting_power.get_value()
+            power = projectile_power.get_value()
+            projectile = Projectile(image, circle, v0, theta, power)
             cast.add_actor(constants.PROJECTILES_GROUP, projectile)

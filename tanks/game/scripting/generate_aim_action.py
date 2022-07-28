@@ -22,19 +22,23 @@ class GenerateAimAction(Action):
         body_t = tank1.get_body()
         position_t = body_t.get_position()
         size_t = body_t.get_size()
-        size = constants.PROJECTION_SIZE
         xp = position_t.get_x() + int(size_t.get_x()/2)
         yp = position_t.get_y() - int(size_t.get_y()/2)
-        position = Point(xp,yp)
+        center = Point(xp,yp)
+        radius = constants.PROJECTION_RADIUS
         h = math.sqrt(math.pow(yc - yp, 2) + math.pow(xc - xp, 2))
         theta = int(math.asin((yc - yp) / h) * 180 / math.pi)
         if xc > xp:
             theta = - theta
         else:
             theta = 180 + theta
-        image = Image(constants.PROJECTION_IMAGE, constants.PROJECTION_SCALE, constants.PROJECTION_ROTATION)
-        body = Body(position, size)
-        projectile = Projectile(image,body,constants.PROJECTILE_EXAMPLE_V0, theta)
+        image = Image(constants.PROJECTILE_IMAGE, constants.PROJECTILE_SCALE, constants.PROJECTILE_ROTATION)
+        circle = Circle(center, constants.PROJECTION_RADIUS, constants.WHITE)
+        shooting_power = cast.get_first_actor(constants.SHOOTING_POWER_GROUP)
+        projectile_power = cast.get_first_actor(constants.PROJECTILE_POWER_GROUP)
+        v0 = shooting_power.get_value()
+        power = projectile_power.get_value()    
+        projectile = Projectile(image, circle, v0, theta, power)
         time_rate = constants.TIME_RATE
         radius = constants.PROJECTION_RADIUS
         color = constants.PROJECTION_COLOR
@@ -42,7 +46,7 @@ class GenerateAimAction(Action):
         #cast.add_actor(constants.PROJECTIONS_GROUP, projection)            
         for i in range(constants.PROJECTIONS_NUMBER):
             new_pos = projectile.calculate_projection_position(time_rate*i)
-            x = new_pos.get_x() + int(radius)
-            y = new_pos.get_y() + int(radius)
+            x = new_pos.get_x()
+            y = new_pos.get_y()
             projection = Circle(Point(x, y), radius, color)
             cast.add_actor(constants.PROJECTIONS_GROUP, projection)

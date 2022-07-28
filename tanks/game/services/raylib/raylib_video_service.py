@@ -57,6 +57,16 @@ class RaylibVideoService(VideoService):
         else:
             pyray.draw_circle_lines(center_x, center_y, radius, rcolor)
 
+    def draw_text_pro(self, text, position, spacing, color):
+        filepath = text.get_fontfile()
+        filepath = str(pathlib.Path(filepath))
+        font = self._fonts[filepath]
+        value = text.get_value()
+        position = self._to_raylib_position(position)
+        size = text.get_size()
+        color = self._to_raylib_color(color)
+        pyray.draw_text_ex(font, value, position, size, spacing, color)
+
     def draw_text(self, text, position):
         filepath = text.get_fontfile()
         # fixed os dependent filepath
@@ -133,3 +143,8 @@ class RaylibVideoService(VideoService):
     def _to_raylib_color(self, color):
         r, g, b, a = color.to_tuple()
         return pyray.Color(r, g, b, a)
+    
+    def _to_raylib_position(self, position):
+        x = position.get_x()
+        y = position.get_y()
+        return pyray.Vector2(x, y)

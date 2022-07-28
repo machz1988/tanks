@@ -12,10 +12,10 @@ class CollideBordersAction(Action):
     def execute(self, cast, script, callback):
         projectiles = cast.get_actors(PROJECTILES_GROUP)
         for projectile in projectiles:
-            body = projectile.get_body()
-            position = body.get_position()
-            x = position.get_x()
-            y = position.get_y()
+            circle = projectile.get_circle()
+            center = circle.get_center()
+            x = center.get_x()
+            y = center.get_y()
             destroy = False
             if x < 0 or x > SCREEN_WIDTH:
                 destroy = True

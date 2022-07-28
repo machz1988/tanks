@@ -12,9 +12,9 @@ class DrawHudAction(Action):
         self._draw_label(cast, LEVEL_GROUP, LEVEL_FORMAT, stats.get_level())
         self._draw_label(cast, LIVES_GROUP, LIVES_FORMAT, stats.get_lives())
         self._draw_label(cast, SCORE_GROUP, SCORE_FORMAT, stats.get_score())
-        self._draw_label(cast, HEALTH_GROUP, HEALTH_FORMAT, stats.get_health())
-        self._draw_label(cast, PROJECTILE_POWER_GROUP, PROJECTILE_POWER_FORMAT, stats.get_projectile_power())
-        self._draw_label(cast, SHOOTING_POWER_GROUP, SHOOTING_POWER_FORMAT, stats.get_shooting_power())
+        #self._draw_label(cast, HEALTH_GROUP, HEALTH_FORMAT, stats.get_health())
+        #self._draw_label(cast, PROJECTILE_POWER_GROUP, PROJECTILE_POWER_FORMAT, stats.get_projectile_power())
+        #self._draw_label(cast, SHOOTING_POWER_GROUP, SHOOTING_POWER_FORMAT, stats.get_shooting_power())
 
     # **********************************************************************************************
     # You found the bug. Great job!

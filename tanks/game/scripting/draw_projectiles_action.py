@@ -1,4 +1,5 @@
 import constants
+from game.casting.point import Point
 from game.scripting.action import Action
 
 class DrawProjectilesAction(Action):
@@ -10,6 +11,10 @@ class DrawProjectilesAction(Action):
         projectiles = cast.get_actors(constants.PROJECTILES_GROUP)
         for projectile in projectiles:
             image = projectile.get_image()
-            body = projectile.get_body()
-            position = body.get_position()
+            circle = projectile.get_circle()
+            center = circle.get_center()
+            radius = circle.get_radius()
+            x = center.get_x() - radius
+            y = center.get_y() - radius
+            position = Point(x, y)
             self._video_service.draw_image(image, position)

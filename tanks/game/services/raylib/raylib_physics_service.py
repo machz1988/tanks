@@ -6,8 +6,16 @@ class RaylibPhysicsService(PhysicsService):
     """ A Raylib implementation of PhysicsService."""
     def __init__(self):
         pass
+
+    def has_collided_circle_rec(self, rectangle, circle):
+        subject_rectangle = self._get_rectangle(rectangle)
+        center = circle.get_center()
+        radius = circle.get_radius()
+        rcenter = pyray.Vector2(center.get_x(), center.get_y()) 
+        return pyray.check_collision_circle_rec(rcenter, radius, subject_rectangle)
+  
         
-    def has_collided(self, subject, agent):
+    def has_collided_recs(self, subject, agent):
         subject_rectangle = self._get_rectangle(subject)
         agent_rectangle = self._get_rectangle(agent)
         return pyray.check_collision_recs(subject_rectangle, agent_rectangle)

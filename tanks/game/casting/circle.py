@@ -33,3 +33,11 @@ class Circle:
             Color: An instance of Color containing the circle's color
         """
         return self._color
+    
+    def set_center(self, center):
+        """Sets the position of the center point of the circle.
+        
+        Returns:
+            Point: An instance of Point containing the center coordinates.
+        """
+        self._center = center

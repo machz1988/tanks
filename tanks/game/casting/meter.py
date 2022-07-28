@@ -1,4 +1,7 @@
+from turtle import position, update
 from game.casting.actor import Actor
+from game.casting.point import Point
+from game.casting.rectangle import Rectangle
 from game.casting.label import Label
 
 class Meter(Actor):
@@ -6,26 +9,27 @@ class Meter(Actor):
     
     The responsibility of Meter is to keep track of the variable's value
     Attributes:
-        _value (integer): the variable's value
-        _kind (string): the meter's kind
+        _label (Label): the meter's label
+        _value (integer): the meter's value to keep track of
         _min_value (integer): the variable's min value
         _max_value (integer): the variable's max value
-        _size (Point): the rectangle's size, the visible representation of the meter
+        _holder (Rectangle): a rectangular shape, the visible representation of the meter
+        _value_holder (Rectangle): a rectangular shape, the visible representation of the value
+        _color (Color): the color of the value holder
     """
 
-    def __init__(self, label, holder, value_holder, value, kind, min_value, max_value, color):
+    def __init__(self, label, holder, value, min_value, max_value, color):
         """
             Constructor for a Meter instance
         """
         super().__init__()
-
         self._label = label
         self._value = value
-        self._kind = kind
         self._min_value = min_value
         self._max_value = max_value
         self._holder = holder
-        self._value_holder = value_holder
+        self._value_holder = Rectangle(Point(0,0), Point(0,0))
+        self._update_value_holder()
         self._color = color
 
     def get_color(self):
@@ -92,6 +96,15 @@ class Meter(Actor):
             value (integer): The given value.
         """
         self._value = value
+        self._update_value_holder()
+        
+    def update_min_value(self, min_value):
+        """Updates min value
+
+        Args:
+            min_value (integer): The given value.
+        """
+        self._max_value = min_value
 
     def update_max_value(self, max_value):
         """Updates max value
@@ -100,3 +113,15 @@ class Meter(Actor):
             max_value (integer): The given value.
         """
         self._max_value = max_value
+    
+    def _update_value_holder(self):
+        positionh = self._holder.get_position()
+        sizeh = self._holder.get_size()
+        wh = sizeh.get_x()
+        hh = sizeh.get_y()
+        measure = (self._max_value - self._min_value) / wh
+        x = int((self._value - self._min_value) / measure)
+        y = hh
+        position = positionh
+        size = Point(x, y)
+        self._value_holder = Rectangle(position, size)
