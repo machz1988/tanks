@@ -28,6 +28,7 @@ from game.scripting.draw_meters_action import DrawMetersAction
 from game.scripting.draw_welcome_action import DrawWelcomeAction
 from game.scripting.end_drawing_action import EndDrawingAction
 from game.scripting.generate_aim_action import GenerateAimAction
+from game.scripting.handle_keys_pressed import HandleKeysPressed
 from game.scripting.handle_mouse_pressed import HandleMousePressed
 from game.scripting.initialize_devices_action import InitializeDevicesAction
 from game.scripting.load_assets_action import LoadAssetsAction
@@ -67,6 +68,7 @@ class SceneManager:
     DRAW_METERS_ACTION = DrawMetersAction(VIDEO_SERVICE)
     END_DRAWING_ACTION = EndDrawingAction(VIDEO_SERVICE)
     GENERATE_AIM_ACTION = GenerateAimAction(MOUSE_SERVICE)
+    HANDLE_KEYS_PRESSED = HandleKeysPressed(KEYBOARD_SERVICE)
     HANDLE_MOUSE_PRESSED = HandleMousePressed(MOUSE_SERVICE)
     INITIALIZE_DEVICES_ACTION = InitializeDevicesAction(AUDIO_SERVICE, VIDEO_SERVICE)
     LOAD_ASSETS_ACTION = LoadAssetsAction(AUDIO_SERVICE, VIDEO_SERVICE)
@@ -165,6 +167,7 @@ class SceneManager:
         Args:
             cast (Cast): the cast of actors
         """
+        cast.clear_actors(TERRAIN_GROUP)
         stats = cast.get_first_actor(STATS_GROUP)
         level = stats.get_level()
         terrain = Terrain(LEVELS[level]["terrain"], TERRAIN_IMAGE)
@@ -248,11 +251,12 @@ class SceneManager:
         cast.add_actor(SHOOTING_POWER_GROUP, shooting_power)    
 
     def _add_stats(self, cast):
-        cast.clear_actors(STATS_GROUP)
+        #cast.clear_actors(STATS_GROUP)
         stats = Stats()
         cast.add_actor(STATS_GROUP, stats)
 
     def _add_tanks(self, cast):
+        cast.clear_actors(TANKS_GROUP)
         terrain = cast.get_first_actor(TERRAIN_GROUP)
         pos_tank1 = terrain.get_tank1_position()
         x1 = pos_tank1.get_x()
@@ -320,5 +324,6 @@ class SceneManager:
     
     def _add_input_script(self, script):
         script.clear_actions(INPUT)
+        script.add_action(INPUT, self.HANDLE_KEYS_PRESSED)
         script.add_action(INPUT, self.GENERATE_AIM_ACTION)
         script.add_action(INPUT, self.HANDLE_MOUSE_PRESSED)
