@@ -1,3 +1,4 @@
+from turtle import position
 import pyray
 from game.casting.actor import Actor
 from game.casting.point import Point
@@ -14,12 +15,13 @@ class Tank(Actor):
         _rotation (float): the tank's rotation
     """
     
-    def __init__(self, position, size, velocity, filename, scale, rotation):
+    def __init__(self, position, size, velocity, filename, scale, rotation, image_position):
         """Constructs an instance of tank
         """
         super().__init__()
         self._body = Body(position, size, velocity)
         self._image = Image(filename, scale, rotation)
+        self._image_position = image_position
         self._can_move = False
 
     def get_body(self):
@@ -38,9 +40,25 @@ class Tank(Actor):
         """
         return self._image
 
+    def get_image_position(self):
+        """Gets the position of tank's image.
+
+        Returns:
+            Image: the position of tank's image.
+        """
+        return self._image_position
+
     def move_next(self):
         """Moves the tank to its next position."""
-        pass
+        velocity = self._body.get_velocity()
+        position = self._body.get_position()
+        x = position.get_x() + velocity.get_x()
+        y = position.get_y() + velocity.get_y()
+        new_position = Point(x, y)
+        self._body.set_position(new_position)
+        ix  = self._image_position.get_x() + velocity.get_x()
+        iy  = self._image_position.get_y() + velocity.get_y()
+        self._image_position = Point(ix, iy)
 
     def set_can_move(self, can_move):
         self._can_move = can_move

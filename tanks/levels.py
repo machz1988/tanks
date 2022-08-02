@@ -396,16 +396,16 @@ TERRAIN_LEVEL_11 = [
 ]
 
 LEVELS = {
-    0: {"terrain": TERRAIN_LEVEL_0, "projectile_power_max": 20},
-    1: {"terrain": TERRAIN_LEVEL_1, "projectile_power_max": 20},
-    2: {"terrain": TERRAIN_LEVEL_2, "projectile_power_max": 20},
-    3: {"terrain": TERRAIN_LEVEL_3, "projectile_power_max": 25},
-    4: {"terrain": TERRAIN_LEVEL_4, "projectile_power_max": 25},
-    5: {"terrain": TERRAIN_LEVEL_5, "projectile_power_max": 25},
-    6: {"terrain": TERRAIN_LEVEL_6, "projectile_power_max": 25},
-    7: {"terrain": TERRAIN_LEVEL_7, "projectile_power_max": 25},
-    8: {"terrain": TERRAIN_LEVEL_8, "projectile_power_max": 25},
-    9: {"terrain": TERRAIN_LEVEL_9, "projectile_power_max": 25},
-    10: {"terrain": TERRAIN_LEVEL_10, "projectile_power_max": 50},
-    11: {"terrain": TERRAIN_LEVEL_11, "projectile_power_max": 50}
+    0: {"terrain": TERRAIN_LEVEL_0, "projectile_power_max": 20, "v0": 390, "theta": 208, "power": 20},
+    1: {"terrain": TERRAIN_LEVEL_1, "projectile_power_max": 20, "v0": 380, "theta": 228, "power": 20},
+    2: {"terrain": TERRAIN_LEVEL_2, "projectile_power_max": 20, "v0": 340, "theta": 228, "power": 20},
+    3: {"terrain": TERRAIN_LEVEL_3, "projectile_power_max": 25, "v0": 430, "theta": 245, "power": 20},
+    4: {"terrain": TERRAIN_LEVEL_4, "projectile_power_max": 25, "v0": 340, "theta": 207, "power": 20},
+    5: {"terrain": TERRAIN_LEVEL_5, "projectile_power_max": 25, "v0": 420, "theta": 240, "power": 20},
+    6: {"terrain": TERRAIN_LEVEL_6, "projectile_power_max": 25, "v0": 380, "theta": 205, "power": 20},
+    7: {"terrain": TERRAIN_LEVEL_7, "projectile_power_max": 25, "v0": 400, "theta": 224, "power": 20},
+    8: {"terrain": TERRAIN_LEVEL_8, "projectile_power_max": 25, "v0": 380, "theta": 237, "power": 20},
+    9: {"terrain": TERRAIN_LEVEL_9, "projectile_power_max": 25, "v0": 420, "theta": 243, "power": 20},
+    10: {"terrain": TERRAIN_LEVEL_10, "projectile_power_max": 50, "v0": 490, "theta": 252, "power": 20},
+    11: {"terrain": TERRAIN_LEVEL_11, "projectile_power_max": 50, "v0": 350, "theta": 200, "power": 20}
 }

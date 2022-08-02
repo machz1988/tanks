@@ -16,6 +16,7 @@ from game.scripting.check_over_action import CheckOverAction
 from game.scripting.collide_borders_action import CollideBordersAction
 from game.scripting.collide_tank_action import CollideTankAction
 from game.scripting.collide_terrain_action import CollideTerrainAction
+from game.scripting.computer_shot_action import ComputerShotAction
 from game.scripting.draw_dialog_action import DrawDialogAction
 from game.scripting.draw_hud_action import DrawHudAction
 from game.scripting.draw_projectiles_action import DrawProjectilesAction
@@ -27,6 +28,7 @@ from game.scripting.draw_messages_action import DrawMessagesAction
 from game.scripting.draw_meters_action import DrawMetersAction
 from game.scripting.draw_welcome_action import DrawWelcomeAction
 from game.scripting.end_drawing_action import EndDrawingAction
+from game.scripting.fall_tank_action import FallTankAction
 from game.scripting.generate_aim_action import GenerateAimAction
 from game.scripting.handle_keys_pressed import HandleKeysPressed
 from game.scripting.handle_mouse_pressed import HandleMousePressed
@@ -58,6 +60,7 @@ class SceneManager:
     COLLIDE_BORDERS_ACTION = CollideBordersAction(PHYSICS_SERVICE, AUDIO_SERVICE)
     COLLIDE_TERRAIN_ACTION = CollideTerrainAction(PHYSICS_SERVICE, AUDIO_SERVICE)
     COLLIDE_TANK_ACTION = CollideTankAction(PHYSICS_SERVICE, AUDIO_SERVICE)
+    #COMPUTER_SHOT_ACTION = ComputerShotAction()
     DRAW_DIALOG_ACTION = DrawDialogAction(VIDEO_SERVICE)
     DRAW_PROJECTILES_ACTION = DrawProjectilesAction(VIDEO_SERVICE)
     DRAW_PROJECTIONS_ACTION = DrawProjectionsAction(VIDEO_SERVICE)
@@ -67,6 +70,7 @@ class SceneManager:
     DRAW_RACKET_ACTION= DrawMessagesAction(VIDEO_SERVICE)
     DRAW_METERS_ACTION = DrawMetersAction(VIDEO_SERVICE)
     END_DRAWING_ACTION = EndDrawingAction(VIDEO_SERVICE)
+    FALL_TANK_ACTION = FallTankAction(PHYSICS_SERVICE)
     GENERATE_AIM_ACTION = GenerateAimAction(MOUSE_SERVICE)
     HANDLE_KEYS_PRESSED = HandleKeysPressed(KEYBOARD_SERVICE)
     HANDLE_MOUSE_PRESSED = HandleMousePressed(MOUSE_SERVICE)
@@ -114,6 +118,7 @@ class SceneManager:
         self._add_release_script(script)
         
     def _prepare_next_level(self, cast, script):
+        cast.clear_actors(PROJECTILES_GROUP)
         self._add_stats(cast)
         self._add_level(cast)
         self._add_lives(cast)
@@ -134,6 +139,7 @@ class SceneManager:
     def _prepare_try_again(self, cast, script):
         #self._add_ball(cast)
         #self._add_racket(cast)
+        cast.clear_actors(PROJECTILES_GROUP)
         self._add_dialog(cast, PREP_TO_LAUNCH)
 
         script.clear_actions(INPUT)
@@ -144,7 +150,10 @@ class SceneManager:
 
     def _prepare_in_play(self, cast, script):
         cast.clear_actors(DIALOG_GROUP)
+        stats = cast.get_first_actor(STATS_GROUP)
+        level = stats.get_level()        
         self._add_input_script(script)
+        script.add_action(INPUT, ComputerShotAction(ATTEMPTS, DEAD_SHOTS, LEVELS[level-1]["v0"], LEVELS[level-1]["theta"], LEVELS[level-1]["power"]))
         self._add_update_script(script)
         self._add_output_script(script)
 
@@ -170,7 +179,7 @@ class SceneManager:
         cast.clear_actors(TERRAIN_GROUP)
         stats = cast.get_first_actor(STATS_GROUP)
         level = stats.get_level()
-        terrain = Terrain(LEVELS[level]["terrain"], TERRAIN_IMAGE)
+        terrain = Terrain(LEVELS[level-1]["terrain"], TERRAIN_IMAGE)
         cast.add_actor(TERRAIN_GROUP, terrain)
 
     def _add_dialog(self, cast, message):
@@ -262,12 +271,14 @@ class SceneManager:
         x1 = pos_tank1.get_x()
         y1 = pos_tank1.get_y()
         pos_tank1 = Point(x1,y1)
+        pos_image_t1 = Point(x1 - 10, y1 - 5)
         pos_tank2 = terrain.get_tank2_position()
         x2 = pos_tank2.get_x()
         y2 = pos_tank2.get_y()
         pos_tank2 = Point(x2,y2)
-        tank1 = Tank(pos_tank1, TANK1_SIZE, TANK1_VELOCITY, TANK1_IMAGE, TANK1_SCALE, TANK1_ROTATION)
-        tank2 = Tank(pos_tank2, TANK2_SIZE, TANK2_VELOCITY, TANK2_IMAGE, TANK2_SCALE, TANK2_ROTATION)
+        pos_image_t2 = Point(x2 - 10, y2 - 5)
+        tank1 = Tank(pos_tank1, TANK1_SIZE, TANK1_VELOCITY, TANK1_IMAGE, TANK1_SCALE, TANK1_ROTATION, pos_image_t1)
+        tank2 = Tank(pos_tank2, TANK2_SIZE, TANK2_VELOCITY, TANK2_IMAGE, TANK2_SCALE, TANK2_ROTATION, pos_image_t2)
         cast.add_actor(TANKS_GROUP, tank1)
         cast.add_actor(TANKS_GROUP, tank2)
 
@@ -320,6 +331,7 @@ class SceneManager:
         script.add_action(UPDATE, self.COLLIDE_TANK_ACTION)
         script.add_action(UPDATE, self.COLLIDE_TERRAIN_ACTION)
         script.add_action(UPDATE, self.COLLIDE_BORDERS_ACTION)
+        script.add_action(UPDATE, self.FALL_TANK_ACTION)
         script.add_action(UPDATE, self.CHECK_OVER_ACTION)
     
     def _add_input_script(self, script):

@@ -35,10 +35,10 @@ class Projectile(Actor):
             Point: calculated position for a projection
         """
         x = self._v0x * t
-        y = - (self._v0y * t - (constants.GRAVITY * math.pow(t, 2) / 2))
+        y = self._v0y * t - (constants.GRAVITY * math.pow(t, 2) / 2)
         x = (self._initial_position.get_x() + int(x))
         y = (self._initial_position.get_y() + int(y)) 
-        return Point(x, y)
+        return Point(x, y)       
 
     def get_circle(self):
         """Get the projectile's body
@@ -66,7 +66,7 @@ class Projectile(Actor):
         """
         self._t += constants.TIME_RATE
         x = self._calculate_x()
-        y = - self._calculate_y()
+        y = self._calculate_y()
         #velocity = Point(int(x), int(y))
         #self.set_velocity(velocity)
         x = self._initial_position.get_x() + int(x)

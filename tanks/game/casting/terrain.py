@@ -10,7 +10,7 @@ class Terrain(Actor):
     The responsibility of Terrain is to place the Tanks correctly and show the play field.
     
     Attributes:
-        _surface (list<Line>): the list of lines which conforms the terrain
+        _surface (list<Rectangle>): the list of rectangles which conforms the terrain
     """
 
     def __init__(self, surface, filename):

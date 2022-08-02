@@ -18,6 +18,7 @@ class Director(ActionCallback):
         self._cast = Cast()
         self._script = Script()
         self._scene_manager = SceneManager()
+        self.who_plays = ID_TANK1
         
     def on_next(self, scene):
         """Overriden ActionCallback method transitions to next scene.

@@ -9,9 +9,13 @@ from game.casting.point import Point
 GAME_NAME = "Tanks"
 #FRAME_RATE = 60
 FRAME_RATE = 30
+ID_TANK1 = 0
+ID_TANK2 = 2
+ATTEMPTS = 5
+DEAD_SHOTS = 5
 
 # PHYSICS
-GRAVITY = 200
+GRAVITY = -200
 TIME_RATE = 0.03
 
 # SCREEN
@@ -183,12 +187,12 @@ TERRAIN_IMAGE = "tanks/tanks/assets/images/ground_texture.png"
 TANKS_GROUP = "tanks"
 TANK1_SIZE = Point(20,20)
 TANK2_SIZE = Point(20,20)
-TANK1_VELOCITY = Point(0, 0)
-TANK2_VELOCITY = Point(0, 0)
+TANK1_VELOCITY = Point(0, 5)
+TANK2_VELOCITY = Point(0, 5)
 TANK1_IMAGE = "tanks/tanks/assets/images/tank1.png"
 TANK2_IMAGE = "tanks/tanks/assets/images/tank2.png"
-TANK1_SCALE = 0.05
-TANK2_SCALE = 0.05
+TANK1_SCALE = 0.08
+TANK2_SCALE = 0.08
 TANK1_ROTATION = 0
 TANK2_ROTATION = 0
 

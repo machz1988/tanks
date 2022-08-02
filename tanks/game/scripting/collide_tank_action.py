@@ -40,8 +40,9 @@ class CollideTankAction(Action):
                         if value <= 0:
                             #self._winner = constants.ID_PLAYER2
                             stats.lose_life()
-                            healths[0].update_value(0)
+                            healths[0].update_value(constants.HEALTH_MIN)
                             #RESTART SCENE
+                            cast.clear_actors(constants.PROJECTIONS_GROUP)
                             restart_scene = True
                     else:
                         value = healths[1].get_value()
@@ -49,10 +50,11 @@ class CollideTankAction(Action):
                         healths[1].update_value(value)
                         if value <= 0:
                             #self._winner = constants.ID_PLAYER1
-                            healths[1].update_value(0)
+                            healths[1].update_value(constants.HEALTH_MIN)
                             #CHANGE SCENE
                             stats.add_points(1)
                             stats.next_level()
+                            cast.clear_actors(constants.PROJECTIONS_GROUP)
                             change_scene = True
                     destroy_projectile = True
                     break
